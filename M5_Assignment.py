@@ -37,41 +37,45 @@ samples = int(input("Enter number of samples "))
 
 final_row,final_col = str((plate.wells(samples)[0]))[0],int(str((plate.wells(samples)[0]))[1])
 
-def add_reagent(x,vol):
-    tic = time.perf_counter()
-    for i in plate.rows_by_name().keys():
-        if(i==final_row):
-            p300_1.distribute(vol, reservoir.wells_by_name()[x], plate.rows_by_name()[i][0:final_col])
-            break
-        else:
-            p300_1.distribute(vol, reservoir.wells_by_name()[x], plate.rows_by_name()[i][0:12])
-    toc = time.perf_counter()
-    return toc-tic
-def rem_reagent(x,vol):
-    tic = time.perf_counter()
-    for i in plate.rows_by_name().keys():
-        if(i==final_row):
-            p300_1.consolidate(vol, plate.rows_by_name()[i][0:final_col], reservoir.wells_by_name()[x])
-            break
-        else:
-            p300_1.consolidate(vol, plate.rows_by_name()[i][0:12], reservoir.wells_by_name()[x])
-    toc = time.perf_counter()
-    return toc-tic
+# def add_reagent(x,vol):
+#     tic = time.perf_counter()
+#     for i in plate.rows_by_name().keys():
+#         if(i==final_row):
+#             p300_1.distribute(vol, reservoir.wells_by_name()[x], plate.rows_by_name()[i][0:final_col])
+#             break
+#         else:
+#             p300_1.distribute(vol, reservoir.wells_by_name()[x], plate.rows_by_name()[i][0:12])
+#     toc = time.perf_counter()
+#     return toc-tic
+# def rem_reagent(x,vol):
+#     tic = time.perf_counter()
+#     for i in plate.rows_by_name().keys():
+#         if(i==final_row):
+#             p300_1.consolidate(vol, plate.rows_by_name()[i][0:final_col], reservoir.wells_by_name()[x])
+#             break
+#         else:
+#             p300_1.consolidate(vol, plate.rows_by_name()[i][0:12], reservoir.wells_by_name()[x])
+#     toc = time.perf_counter()
+#     return toc-tic
 
 def add_ab(x,vol):
     tic = time.perf_counter()
+    initial = cool_reagents.wells().index(cool_reagents[x])
+    counter = 1
     for i in plate.wells():
+        indx = initial + math.ceil(counter/19)-1
+            
         if(i==plate.wells(samples)):
             break
         else:
-            p300_1.transfer(vol,reservoir[x], i, touch_tip=True, blow_out=True, blowout_location='destination well', new_tip='always') 
-    
+            p300_1.transfer(vol,cool_reagents.wells(indx), i, touch_tip=True, blow_out=True, blowout_location='destination well', new_tip='always')
+        counter = counter+1
     toc = time.perf_counter()
-    return toc-tic   
+    return toc-tic
 
 def add_reagent_m(x,vol):
     tic = time.perf_counter()
-    p300_2.distribute(vol, reservoir.wells_by_name()[x], plate.rows_by_name()['A'][:final_col],new_tip='once')
+    p300_2.distribute(vol, reservoir.wells_by_name()[x], plate.rows_by_name()['A'][:final_col],trash = False)
     toc = time.perf_counter()
     return toc-tic
 
@@ -92,38 +96,80 @@ rem_reagent_m('A1',200)
 add_reagent_m('A3',200)
 rem_reagent_m('A1',200)
 
-# #Add/Remove PFA(From reservoir 4)
-# t = add_reagent_m('A4',200)
-# protocol.delay(10*60-t)
-# rem_reagent_m('A1',200)
+#Add/Remove PFA(From reservoir 4)
+t = add_reagent_m('A4',200)
+protocol.delay(10*60-t)
+rem_reagent_m('A1',200)
 
-# #Wash with PBS(From reservoir 2)
-# add_reagent_m('A2',200)
-# rem_reagent_m('A1',200)
-# add_reagent_m('A2',200)
-# rem_reagent_m('A1',200)
-# add_reagent_m('A2',200)
-# rem_reagent_m('A1',200)
+#Wash with PBS(From reservoir 2)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
 
-# #Add/Remove PBS PBS/0.1% Triton X-100(From reservoir 5)
-# t = add_reagent_m('A5', 200)
-# protocol.delay(10*60-t)
-# rem_reagent_m('A1',200)
+#Add/Remove PBS PBS/0.1% Triton X-100(From reservoir 5)
+t = add_reagent_m('A5', 200)
+protocol.delay(10*60-t)
+rem_reagent_m('A1',200)
 
-# #Wash with PBS(From reservoir 2)
-# add_reagent_m('A2',200)
-# rem_reagent_m('A1',200)
-# add_reagent_m('A2',200)
-# rem_reagent_m('A1',200)
-# add_reagent_m('A2',200)
-# rem_reagent_m('A1',200)
+#Wash with PBS(From reservoir 2)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
 
-# #Add/Remove Blocking solution (From reservoir 6)
-# t = add_reagent_m('A6', 200)
-# protocol.delay(30*60-t)
-# rem_reagent_m('A6',200)
+#Add/Remove Blocking solution (From reservoir 6)
+t = add_reagent_m('A6', 200)
+protocol.delay(30*60-t)
+rem_reagent_m('A1',200)
 
-# #Add/Remove A.B solution (From reservoir 6)
+#Add/Remove A.B 1 solution (From Cold block 1)
+t = add_ab("A1", 100)
+protocol.delay(60*60-t)
+rem_reagent_m('A1',100)
+
+#Wash with PBS(From reservoir 2)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+
+#Add/Remove A.B 2 solution (From Cold block 1)
+t = add_ab("A2", 100)
+protocol.delay(60*60-t)
+rem_reagent_m('A1',100)
+
+#Wash with PBS(From reservoir 2)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+
+#Add/Remove Red dye solution (From reservoir 7)
+t = add_reagent_m('A6', 200)
+protocol.delay(10*60-t)
+rem_reagent_m('A1',200)
+
+#Add/Remove DAPI dye solution (From reservoir 7)
+t = add_reagent_m('A6', 200)
+protocol.delay(60-t)
+rem_reagent_m('A1',200)
+
+#Wash with PBS(From reservoir 2)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
+add_reagent_m('A2',200)
+rem_reagent_m('A1',200)
 
 
 
