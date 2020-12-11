@@ -1,0 +1,57 @@
+
+samples = int(input("Enter number of samples (8-96) "))
+p_dil = int(input("Enter primary antibody dilution = 1:"))
+s_dil = int(input("Enter secondary antibody dilution = 1:"))
+
+# Working volumes for reservoir (think we will need to add another reservoir just for PBS due to large volumes
+Vol_200=round(samples*0.2+1)
+Vol_100=round(samples*0.1+1)
+Vol_50=round(samples*0.05+1)
+Vol_PBS=round(samples*1.8+1)
+print("\nFor",samples,"samples, prepare and add the following reagents to the designated reservoir wells at position 4:")
+print("\nPBST (PBS, 0.1% Tween) in A2 =",Vol_200,"mL")
+print("\nFixing Solution (PBS, 4% paraformaldehyde, pH 7.4) in A3 =",Vol_100,"mL")
+print("\nDetergent Solution (PBS, 0.1% Triton) in A4 =",Vol_100,"mL")
+print("\nBlocking Solution (PBST, 1% BSA, 22.5mg/mL glycine) in A5 =",Vol_100,"mL")
+print("\nPrimary antibody dilutant (PBST, 1% BSA) in A6 =",Vol_50,"mL")
+print("\nSecondary antibody dilutant (PBST, 1% BSA) in A7 =",Vol_50,"mL")
+print("\nF-actin stain (PBS, 1:50 Flash Phalloidin Red) in A8 =",Vol_50,"mL")
+print("\nNuclear stain (PBS, 0.1% DAPI nuclear stain) in A9 =",Vol_50,"mL")
+print("\nPBS =",Vol_PBS,"mL \nAdd PBS to wells in reservoir at position 5 (Starting from A1, max 22mL per well)")
+
+
+#Antibody stuff
+#Have added something to make sure antibodies work in right dilutions and sample number (they can be too dilute or concentrated to mix with the dilutant).
+#Have mentioned that if antibody volume to add is <30uL, then you need to add the single channel p20, otherwise add p300. we can just run the code with the p300 installed, as most dilutions required this. nevertheless, we've covered all possibilities regarding antibody volumes.
+
+print("\nAntibody setup:")
+
+prim_ab_add=Vol_50/p_dil*1000
+#print("Primary antibody to add to ",Vol_50,"mL of primary dilutant =",prim_ab_add, "µL")
+seco_ab_add=Vol_50/s_dil*1000
+#print("Secondary antibody to add to ",Vol_50,"mL of secondary dilutant =",seco_ab_add, "µL")
+
+if prim_ab_add >20 and prim_ab_add <300:
+    print("For",Vol_50,"mL of dilutant, place a", round(prim_ab_add+20),"µL aliqout of the primary antibody stock into A1 in the cold block at position 3.\nPlace a", round(seco_ab_add+30),"µL aliquot of the secondary antibody stock into A2.")
+    print("Ensure the single-channel p300 pipette is installed")
+    print("\nMake sure the Opentrons is covered or in the dark\n- Run protocol when all reagents are placed -")
+    execute=int(input("Run protocol? (type: '1'): "))
+    if execute==1:
+        for line in protocol.commands(): 
+            print(line)
+    else:
+        print("Program stopped, check reagent setup and rerun. ")
+elif prim_ab_add >1 and prim_ab_add <20:
+    print("For",Vol_50,"mL of dilutant, place a", round(prim_ab_add+20),"µL aliqout of the primary antibody stock into A1 in the cold block at position 3.\nPlace a", round(seco_ab_add+30),"µL aliquot of the secondary antibody stock into A2.")
+    print("Ensure the single-channel p20 pipette is installed")
+    print("\nMake sure the Opentrons is covered or in the dark\n- Run protocol when all reagents are placed -")
+    execute=int(input("Run protocol? (type: '1'): "))
+    if execute==1:
+        for line in protocol.commands(): 
+            print(line)
+elif prim_ab_add <1:
+    print("Error: Antibody too dilute for accurate pippetting.")
+else:
+    print("Error: Antibody too concentrated for accurate pippetting.")
+
+
