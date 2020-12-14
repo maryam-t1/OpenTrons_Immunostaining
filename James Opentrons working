@@ -71,7 +71,8 @@ elif p_dil and s_dil in range(21,301):
     print("\n-Ensure the single-channel p300 pipette and the corresponding tips are installed-")
 else:
     print("Error: Adjust concentration of antibody aliquots.")
-    
+
+# Create a txt file to save the run info
 with open('immuno_run.txt', 'w', newline='') as f:
     print('Number of samples = {}'.format(samples), file=f)
 # Working volumes for reservoirs 
