@@ -1,6 +1,7 @@
 #Initialisation
 from opentrons import simulate
 import time
+import csv
 metadata = {'apiLevel': '2.8'}
 protocol = simulate.get_protocol_api('2.8')
 
@@ -221,3 +222,28 @@ if execute==1:
 
 else:
     print("Program stopped, check reagent setup and rerun.")
+    
+with open('immuno_run.csv', 'w', newline='') as f:
+    fieldnames=['sample','primary antibody dilution',
+                        'secondary antibody dilution',
+                        'Total PBS','PBST (PBS, 0.1% Tween) in A1',
+                        'Fixing Solution (PBS, 4% paraformaldehyde, pH 7.4) in A2',
+                        'Detergent Solution (PBS, 0.1% Triton) in A3',
+                        'Blocking Solution (PBST, 1% BSA, 22.5mg/mL glycine) in A4',
+                        'Primary antibody dilutant (PBST, 1% BSA) in A5',
+                        'Secondary antibody dilutant (PBST, 1% BSA) in A6',
+                        'F-actin stain (PBS, 1:50 Flash Phalloidin Red) in A7',
+                        'Nuclear stain (PBS, 0.1% DAPI nuclear stain) in A8']
+    filewrite=csv.DictWriter(f, fieldnames=fieldnames)
+    filewrite.writeheader()
+    filewrite.writerow({'sample': samples,'primary antibody dilution':p_dil,
+                        'secondary antibody dilution': s_dil,'Total PBS':Total_PBS,
+                        'PBST (PBS, 0.1% Tween) in A1':Vol_200,
+                        'Fixing Solution (PBS, 4% paraformaldehyde, pH 7.4) in A2':Vol_100,
+                        'Detergent Solution (PBS, 0.1% Triton) in A3':Vol_100,
+                        'Blocking Solution (PBST, 1% BSA, 22.5mg/mL glycine) in A4':Vol_100,
+                        'Primary antibody dilutant (PBST, 1% BSA) in A5':Vol_50,
+                        'Secondary antibody dilutant (PBST, 1% BSA) in A6':Vol_50,
+                        'F-actin stain (PBS, 1:50 Flash Phalloidin Red) in A7':Vol_50,
+                        'Nuclear stain (PBS, 0.1% DAPI nuclear stain) in A8':Vol_50 })
+    
