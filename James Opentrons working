@@ -72,24 +72,27 @@ elif p_dil and s_dil in range(21,301):
 else:
     print("Error: Adjust concentration of antibody aliquots.")
     
+with open('immuno_run.txt', 'w', newline='') as f:
+    print('Number of samples = {}'.format(samples), file=f)
 # Working volumes for reservoirs 
-print("\nPrepare PBS (Total) =",Total_PBS,"mL") 
-print("Prepare and add the following reagents to the designated reservoir wells at position 4:")
-print("\nPBST (PBS, 0.1% Tween) in A1 =",Vol_200,"mL") # add cold
-print("\nFixing Solution (PBS, 4% paraformaldehyde, pH 7.4) in A2 =",Vol_100,"mL")
-print("\nDetergent Solution (PBS, 0.1% Triton) in A3 =",Vol_100,"mL")
-print("\nBlocking Solution (PBST, 1% BSA, 22.5mg/mL glycine) in A4 =",Vol_100,"mL")
-print("\nPrimary antibody dilutant (PBST, 1% BSA) in A5 =",Vol_50,"mL")
-print("\nSecondary antibody dilutant (PBST, 1% BSA) in A6 =",Vol_50,"mL")
-print("\nF-actin stain (PBS, 1:50 Flash Phalloidin Red) in A7 =",Vol_50,"mL")
-print("\nNuclear stain (PBS, 0.1% DAPI nuclear stain) in A8 =",Vol_50,"mL")
-print("\nAdd",round(Vol_PBS),"mL of remaining PBS to wells 1-9 in the reservoir at position 5.")
-#Antibodies setup
-print("\nAntibody setup:")
-print("\nPrimary antibody to add to",Vol_50,"mL of primary dilutant (1:",p_dil,") =",round(prim_ab_add), "µL")
-print("Place a",round(prim_ab_add+10),"µL aliqout of the primary antibody stock into A1 in the cold block at position 3.")
-print("\nSecondary antibody to add to",Vol_50,"mL of secondary dilutant (1:",s_dil,") =",round(seco_ab_add), "µL")
-print("Place a",round(seco_ab_add+10),"µL aliquot of the secondary antibody stock into A2 in the cold block at position 3.")
+    print("\nPrepare PBS (Total) = {}".format(Total_PBS),"mL", file=f) 
+    print("Prepare and add the following reagents to the designated reservoir wells at position 4:", file=f)
+    print("\nPBST (PBS, 0.1% Tween) in A1 = {}".format(Vol_200),"mL", file=f) # add cold
+    print("\nFixing Solution (PBS, 4% paraformaldehyde, pH 7.4) in A2 = {}". format(Vol_100),"mL", file=f)
+    print("\nDetergent Solution (PBS, 0.1% Triton) in A3 = {}".format(Vol_100),"mL", file=f)
+    print("\nBlocking Solution (PBST, 1% BSA, 22.5mg/mL glycine) in A4 = {}".format(Vol_100),"mL", file=f)
+    print("\nPrimary antibody dilutant (PBST, 1% BSA) in A5 ={}".format(Vol_50),"mL", file=f)
+    print("\nSecondary antibody dilutant (PBST, 1% BSA) in A6 ={}".format(Vol_50),"mL", file=f)
+    print("\nF-actin stain (PBS, 1:50 Flash Phalloidin Red) in A7 ={}".format(Vol_50),"mL", file=f)
+    print("\nNuclear stain (PBS, 0.1% DAPI nuclear stain) in A8 ={}".format(Vol_50),"mL", file=f)
+    print("\nAdd {}". format(round(Vol_PBS)),"mL of remaining PBS to wells 1-9 in the reservoir at position 5.", file=f)
+    #Antibodies setup
+    print("\nAntibody setup:", file=f)
+    print("\nPrimary antibody to add to {}". format(Vol_50),"mL of primary dilutant (1:",p_dil,") ={}".format(round(prim_ab_add)), "µL", file=f)
+    print("Place a {}".format(round(prim_ab_add+10)),"µL aliqout of the primary antibody stock into A1 in the cold block at position 3.", file=f)
+    print("\nSecondary antibody to add to {}".format(Vol_50),"mL of secondary dilutant (1:",s_dil,") ={}". format(round(seco_ab_add)), "µL", file=f)
+    print("Place a {}".format(round(seco_ab_add+10)),"µL aliquot of the secondary antibody stock into A2 in the cold block at position 3.", file=f)
+
 print("\nMake sure the Opentrons is covered or in the dark\n- Run protocol when all reagents are placed -")
 
 #Protocol steps
